@@ -211,6 +211,7 @@ public class A5Algorithm {
 
     public String to_binary(String plain_text) {
         System.out.println("Start converting to binary");
+        System.out.println("plain_text length" + plain_text.length());
         String result = "";
         for (int i = 0; i < plain_text.length(); i++) {
             result += String.format("%8s", Integer.toBinaryString(plain_text.charAt(i)))   // char -> int, auto-cast
@@ -273,7 +274,7 @@ public class A5Algorithm {
             this.reg_LFSR3[0] = temp_3;
         }
 
-        String key_string_text = "\n** Key Stream after cycle 228 **\n ";
+        String key_string_text = "\n** Key Stream after  228 cycle  **\n ";
         for (int i = 0; i < key_stream.length; i++) {
             key_string_text += key_stream[i];
         }

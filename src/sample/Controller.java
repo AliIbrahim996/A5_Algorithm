@@ -1,5 +1,6 @@
 package sample;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,9 +10,7 @@ import javax.swing.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -37,7 +36,7 @@ public class Controller {
 
 
     public void write_to_text_area(String text) {
-        algo_text.appendText(text);
+        Platform.runLater(() -> algo_text.appendText(text));
     }
 
     @FXML
@@ -116,7 +115,7 @@ public class Controller {
     @FXML
     private void on_save_action(ActionEvent event) {
 
-        Thread th_process = new Thread(() -> {
+        /*Thread th_process = new Thread(() -> {
             try {
                 p.process();
             } catch (InterruptedException ex) {
@@ -138,7 +137,7 @@ public class Controller {
             });
             th_process.start();
             th_encrypt_thread.start();
-        }
+        }*/
     }
 
     @FXML
@@ -203,7 +202,7 @@ public class Controller {
 
         boolean flag = false, audio_flag = false;
         public A5Algorithm algorithm;
-        String lines;
+        String lines = "";
 
         public Process(Controller c) {
             algorithm = new A5Algorithm(c);
@@ -257,8 +256,9 @@ public class Controller {
             synchronized (this) {
                 if (file != null) {
                     write_to_text_area("** Reading file \n");
-                    byte[] bytes = Files.readAllBytes(file.toPath());
-                    lines = Arrays.toString(bytes);
+                    Scanner reader = new Scanner(file, String.valueOf(StandardCharsets.UTF_8));
+                    while (reader.hasNextLine())
+                        lines += reader.nextLine();
                     System.out.println(lines);
                     write_to_text_area("finished! **\n");
                     flag = true;
