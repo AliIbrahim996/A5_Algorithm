@@ -50,5 +50,6 @@
     </Button>
     <TextArea fx:id="algo_text" accessibleText="algo_text" editable="false" layoutX="14.0" layoutY="55.0"
               prefHeight="200.0" prefWidth="356.0" wrapText="true"/>
-    <RadioButton fx:id="dec" layoutX="486.0" layoutY="146.0" mnemonicParsing="false" text="Decrypt" visible="false"/>
+    <RadioButton fx:id="dec" layoutX="486.0" layoutY="146.0" mnemonicParsing="false" text="Decrypt" visible="false"
+        onAction="#on_de_selected"/>
 </Pane>
