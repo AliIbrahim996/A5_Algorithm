@@ -1,5 +1,5 @@
 *.iml
 .idea
 *.docx
-out/
+out/production
 src/META-INF

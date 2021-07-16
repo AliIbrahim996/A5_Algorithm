@@ -29,8 +29,11 @@ public class Controller {
     public Button save = new Button();
     @FXML
     public Label cycle_label = new Label();
+    @FXML
+    public RadioButton dec = new RadioButton();
+
     Process p = new Process(this);
-    boolean save_enc = false;
+    boolean save_enc = false, save_dec = false;
     @FXML
     public TextArea algo_text = new TextArea();
 
@@ -42,6 +45,15 @@ public class Controller {
     @FXML
     private void on_enc_selected(ActionEvent event) {
         if (enc.selectedProperty().get()) {
+            dec.selectedProperty().setValue(false);
+            run.visibleProperty().setValue(true);
+        }
+    }
+
+    @FXML
+    private void on_de_selected(ActionEvent event) {
+        if (dec.selectedProperty().get()) {
+            enc.selectedProperty().setValue(false);
             run.visibleProperty().setValue(true);
         }
     }
@@ -95,13 +107,29 @@ public class Controller {
 
             }
         });
-
+        Thread th_encrypt_thread;
         if (enc.selectedProperty().get()) {
-            Thread th_encrypt_thread = new Thread(() -> {
+            th_encrypt_thread = new Thread(() -> {
                 try {
                     p.encrypt();
                     enc.selectedProperty().set(false);
                     save_enc = true;
+                    save_dec = false;
+                    save.visibleProperty().setValue(true);
+                } catch (InterruptedException | FileNotFoundException interrupted_exception) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, interrupted_exception);
+                }
+            });
+
+            th_process.start();
+            th_encrypt_thread.start();
+        } else if (dec.selectedProperty().get()) {
+            th_encrypt_thread = new Thread(() -> {
+                try {
+                    p.decrypt();
+                    dec.selectedProperty().set(false);
+                    save_dec = true;
+                    save_enc = false;
                     save.visibleProperty().setValue(true);
                 } catch (InterruptedException | FileNotFoundException interrupted_exception) {
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, interrupted_exception);
@@ -277,6 +305,21 @@ public class Controller {
                 notify();
 
             }
+        }
+
+        public void decrypt() throws InterruptedException, FileNotFoundException {
+            Thread.sleep(2000);
+            synchronized (this) {
+                solver2();
+                notify();
+
+            }
+        }
+
+        private void solver2() throws InterruptedException {
+            String plain_text = "";
+            plain_text = algorithm.decrypt(lines);
+            write_to_text_area("\n** Plain text is: **\n" + plain_text);
         }
 
         private void solver1() throws InterruptedException {

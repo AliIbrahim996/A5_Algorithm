@@ -296,4 +296,13 @@ public class A5Algorithm {
         return encrypted_text;
     }
 
+    public String decrypt(String cipher_text) throws InterruptedException {
+        System.out.println("Running..");
+        String encrypted_text = "";
+        for (int i = 0; i < cipher_text.length(); i++) {
+            encrypted_text += (this.key_stream[i % 228] ^ cipher_text.charAt(i)) == 48 ? "0" : "1";
+        }
+        return convert_binary_to_string(encrypted_text);
+    }
+
 }
