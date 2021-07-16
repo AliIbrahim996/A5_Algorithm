@@ -11,9 +11,9 @@ import java.util.Random;
 public class A5Algorithm {
 
 
-    private final int[] reg_LFSR1;
-    private final int[] reg_LFSR2;
-    private final int[] reg_LFSR3;
+    private int[] reg_LFSR1;
+    private int[] reg_LFSR2;
+    private int[] reg_LFSR3;
     private int[] session_key;
     private final int[] frame_counter = new int[]{1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1,};
     private int[] key_stream;
@@ -30,10 +30,6 @@ public class A5Algorithm {
      * @breif constructor
      */
     public A5Algorithm(Controller c) {
-        reg_LFSR1 = new int[19];
-        reg_LFSR2 = new int[22];
-        reg_LFSR3 = new int[23];
-        init_registers();
         this.c = c;
     }
 
@@ -43,13 +39,13 @@ public class A5Algorithm {
     private void init_registers() {
         int index;
         for (index = 0; index < reg_LFSR1.length; index++) {
-            reg_LFSR1[index] = 0x00;
+            reg_LFSR1[index] = 0;
         }
         for (index = 0; index < reg_LFSR2.length; index++) {
-            reg_LFSR2[index] = 0x00;
+            reg_LFSR2[index] = 0;
         }
         for (index = 0; index < reg_LFSR3.length; index++) {
-            reg_LFSR3[index] = 0x00;
+            reg_LFSR3[index] = 0;
         }
     }
 
@@ -77,6 +73,9 @@ public class A5Algorithm {
      * this step clocked 64 times with session key
      */
     private void clocking_lfsrs_with_session_key() {
+        reg_LFSR1 = new int[19];
+        reg_LFSR2 = new int[22];
+        reg_LFSR3 = new int[23];
         for (int keyIdx = 0; keyIdx < 64; keyIdx++) {
             int temp_1 = this.session_key[keyIdx] ^ feed_back(1);
             int temp_2 = this.session_key[keyIdx] ^ feed_back(2);
@@ -263,14 +262,8 @@ public class A5Algorithm {
 
         key_stream = new int[228];
         for (int i = 0; i < 228; i++) {
+            clocking_lFSRs_with_majority_vote();
             this.key_stream[i] = this.reg_LFSR1[18] ^ this.reg_LFSR2[21] ^ this.reg_LFSR3[22];
-            int temp_1 = feed_back(1);
-            int temp_2 = feed_back(2);
-            int temp_3 = feed_back(3);
-            shift_left();
-            this.reg_LFSR1[0] = temp_1;
-            this.reg_LFSR2[0] = temp_2;
-            this.reg_LFSR3[0] = temp_3;
         }
 
         String key_string_text = "\n** Key Stream after  228 cycle  **\n ";

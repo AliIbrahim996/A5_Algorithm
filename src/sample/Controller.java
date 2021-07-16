@@ -82,7 +82,8 @@ public class Controller {
 
         Thread th2 = new Thread(() -> {
             try {
-                write_to_text_area("** Start reading file **\n");
+                algo_text.clear();
+                Platform.runLater(() -> algo_text.setText("** Start reading file **\n"));
                 p.read_session_key_from_file(file);
                 read_file.visibleProperty().setValue(true);
                 cycle.visibleProperty().setValue(true);
@@ -248,26 +249,11 @@ public class Controller {
                     Scanner read = new Scanner(file);
                     write_to_text_area("** Reading session key \n");
                     String session_key = read.nextLine();
-                    Thread set_key = new Thread(() -> {
-                        algorithm.set_session_key(session_key);
-                    });
-                    Thread set_frame = new Thread(() -> {
-                        algorithm.setFrame_counter();
-                    });
-                    Thread set_majority = new Thread(() -> {
+                    algorithm.set_session_key(session_key);
+                    algorithm.setFrame_counter();
+                    for (int i = 0; i < 100; i++)
                         algorithm.clocking_lFSRs_with_majority_vote();
-                    });
-                    Thread set_key_stream = new Thread(() -> {
-                        algorithm.production_of_key_stream();
-                    });
-                    set_key.start();
-                    set_frame.start();
-                    set_key.join();
-                    set_frame.join();
-                    set_majority.start();
-                    set_majority.join();
-                    set_key_stream.start();
-                    set_key_stream.join();
+                    algorithm.production_of_key_stream();
                     write_to_text_area("\n** finished! **\n");
                     notify();
                 } else {
@@ -289,9 +275,10 @@ public class Controller {
             synchronized (this) {
                 if (file != null) {
                     write_to_text_area("** Reading file \n");
+                    lines = "";
                     Scanner reader = new Scanner(file, String.valueOf(StandardCharsets.UTF_8));
                     while (reader.hasNextLine())
-                        lines += reader.nextLine();
+                        lines += reader.nextLine() + "\n";
                     System.out.println(lines);
                     write_to_text_area("finished! **\n");
                     flag = true;
