@@ -143,7 +143,13 @@ public class Controller {
     @FXML
     private void on_save_action(ActionEvent event) {
 
-        /*Thread th_process = new Thread(() -> {
+        FileChooser.ExtensionFilter extFilter =
+                new FileChooser.ExtensionFilter("TXT files", "*.txt");
+        FileChooser save_as = new FileChooser();
+        save_as.getExtensionFilters().add(extFilter);
+        File file = save_as.showSaveDialog(null);
+
+        Thread th_process = new Thread(() -> {
             try {
                 p.process();
             } catch (InterruptedException ex) {
@@ -152,20 +158,16 @@ public class Controller {
             }
         });
 
-        if (enc.selectedProperty().get()) {
-            Thread th_encrypt_thread = new Thread(() -> {
-                try {
-                    p.encrypt();
-                    enc.selectedProperty().set(false);
-                    save_enc = true;
-                    save.visibleProperty().setValue(true);
-                } catch (InterruptedException | FileNotFoundException interrupted_exception) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE, null, interrupted_exception);
-                }
-            });
-            th_process.start();
-            th_encrypt_thread.start();
-        }*/
+        Thread th_save_thread = new Thread(() -> {
+            try {
+                p.save_file(file);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        th_process.start();
+        th_save_thread.start();
+
     }
 
     @FXML
@@ -231,6 +233,7 @@ public class Controller {
         boolean flag = false, audio_flag = false;
         public A5Algorithm algorithm;
         String lines = "";
+        String text = "";
 
         public Process(Controller c) {
             algorithm = new A5Algorithm(c);
@@ -298,6 +301,23 @@ public class Controller {
             }
         }
 
+        public void save_file(File file) throws InterruptedException {
+            Thread.sleep(2000);
+            synchronized (this) {
+                try {
+                    PrintWriter writer;
+                    writer = new PrintWriter(file);
+                    writer.println(text);
+                    writer.close();
+                    write_to_text_area("\n** File " + file.getName() + " saved successfully!**\n");
+                    notify();
+                } catch (IOException ex) {
+                    Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+
+        }
+
         public void encrypt() throws InterruptedException, FileNotFoundException {
             Thread.sleep(2000);
             synchronized (this) {
@@ -317,18 +337,16 @@ public class Controller {
         }
 
         private void solver2() throws InterruptedException {
-            String plain_text = "";
-            plain_text = algorithm.decrypt(lines);
-            write_to_text_area("\n** Plain text is: **\n" + plain_text);
+            text = algorithm.decrypt(lines);
+            write_to_text_area("\n** Plain text is: **\n" + text);
         }
 
         private void solver1() throws InterruptedException {
-            String cipher_text = "";
             if (audio_flag)
-                cipher_text = algorithm.encrypt(lines);
+                text = algorithm.encrypt(lines);
             else
-                cipher_text = algorithm.encrypt(algorithm.to_binary(lines));
-            write_to_text_area("\n** Cipher text is: **\n" + cipher_text);
+                text = algorithm.encrypt(algorithm.to_binary(lines));
+            write_to_text_area("\n** Cipher text is: **\n" + text);
         }
 
         public void read_audio_file(File file) throws InterruptedException, IOException {
