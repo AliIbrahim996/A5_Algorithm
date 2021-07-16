@@ -1,7 +1,6 @@
 package sample;
 
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * @author Ali Ibrahim
@@ -33,21 +32,6 @@ public class A5Algorithm {
         this.c = c;
     }
 
-    /**
-     * The registers are initialized with zero-values
-     */
-    private void init_registers() {
-        int index;
-        for (index = 0; index < reg_LFSR1.length; index++) {
-            reg_LFSR1[index] = 0;
-        }
-        for (index = 0; index < reg_LFSR2.length; index++) {
-            reg_LFSR2[index] = 0;
-        }
-        for (index = 0; index < reg_LFSR3.length; index++) {
-            reg_LFSR3[index] = 0;
-        }
-    }
 
     public void set_session_key(String session_key) {
         this.session_key = new int[64];
@@ -57,14 +41,11 @@ public class A5Algorithm {
     }
 
     public void setFrame_counter() {
-       /* for (int i = 0; i < 22; i++) {
-            this.frame_counter[i] = Math.random() > 0.5 ? 1 : 0;
-        }*/
-        String frame_string_text = "\n** frame counter after 22 cycle  **\n ";
-        for (int i = 0; i < frame_counter.length; i++) {
-            frame_string_text += frame_counter[i];
+        StringBuilder frame_string_text = new StringBuilder("\n** frame counter after 22 cycle  **\n ");
+        for (int j : frame_counter) {
+            frame_string_text.append(j);
         }
-        c.write_to_text_area(frame_string_text);
+        c.write_to_text_area(frame_string_text.toString());
         clocking_lFSRs_with_frame_counter();
     }
 
@@ -134,7 +115,7 @@ public class A5Algorithm {
      * key, they no longer hold only zero-values.the registers are clocked against a 22 bit
      * frame counter, where the bits of the frame counter are
      * XORed with the feedback of each register and fed into
-     * the LSB of its respective registe
+     * the LSB of its respective register
      */
     public void clocking_lFSRs_with_frame_counter() {
         for (int counterIdx = 0; counterIdx < 22; counterIdx++) {
@@ -180,7 +161,7 @@ public class A5Algorithm {
     }
 
     /**
-     * @brief a method to shift registers to left "irregular clocking"
+     * @breif a method to shift registers to left "irregular clocking"
      */
     private void shift_reg_clock(int registerIdx) {
         int[] temp_register;
@@ -196,7 +177,6 @@ public class A5Algorithm {
                 if (this.reg_LFSR2.length - 1 >= 0)
                     System.arraycopy(temp_register, 0, this.reg_LFSR2, 1, this.reg_LFSR2.length - 1);
             }
-            ;
             break;
             case 3: {
                 temp_register = this.reg_LFSR3.clone();
@@ -210,12 +190,12 @@ public class A5Algorithm {
     public String to_binary(String plain_text) {
         System.out.println("Start converting to binary");
         System.out.println("plain_text length" + plain_text.length());
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < plain_text.length(); i++) {
-            result += String.format("%8s", Integer.toBinaryString(plain_text.charAt(i)))   // char -> int, auto-cast
-                    .replaceAll(" ", "0");                      // zero pads;
+            result.append(String.format("%8s", Integer.toBinaryString(plain_text.charAt(i)))   // char -> int, auto-cast
+                    .replaceAll(" ", "0"));                      // zero pads;
         }
-        return result;
+        return result.toString();
     }
 
     public String convert_byte_arrays_to_binary(byte[] input) {
@@ -266,35 +246,35 @@ public class A5Algorithm {
             this.key_stream[i] = this.reg_LFSR1[18] ^ this.reg_LFSR2[21] ^ this.reg_LFSR3[22];
         }
 
-        String key_string_text = "\n** Key Stream after  228 cycle  **\n ";
-        for (int i = 0; i < key_stream.length; i++) {
-            key_string_text += key_stream[i];
+        StringBuilder key_string_text = new StringBuilder("\n** Key Stream after  228 cycle  **\n ");
+        for (int j : key_stream) {
+            key_string_text.append(j);
         }
-        c.write_to_text_area(key_string_text);
+        c.write_to_text_area(key_string_text.toString());
     }
 
     /**
-     * @param plain_text
+     * @param plain_text refers to text that we want to encrypt
      * @return a String represents the cipher text
-     * @brief method to encrypt plain text
+     * @breif method to encrypt plain text
      */
-    public String encrypt(String plain_text) throws InterruptedException {
+    public String encrypt(String plain_text) {
         System.out.println("Running..");
-        String encrypted_text = "";
+        StringBuilder encrypted_text = new StringBuilder();
         for (int i = 0; i < plain_text.length(); i++) {
-            encrypted_text += (this.key_stream[i % 228] ^ plain_text.charAt(i)) == 48 ? "0" : "1";
+            encrypted_text.append((this.key_stream[i % 228] ^ plain_text.charAt(i)) == 48 ? "0" : "1");
             System.out.println("Iteration " + i);
         }
-        return encrypted_text;
+        return encrypted_text.toString();
     }
 
-    public String decrypt(String cipher_text) throws InterruptedException {
+    public String decrypt(String cipher_text) {
         System.out.println("Running..");
-        String encrypted_text = "";
+        StringBuilder encrypted_text = new StringBuilder();
         for (int i = 0; i < cipher_text.length(); i++) {
-            encrypted_text += (this.key_stream[i % 228] ^ cipher_text.charAt(i)) == 48 ? "0" : "1";
+            encrypted_text.append((this.key_stream[i % 228] ^ cipher_text.charAt(i)) == 48 ? "0" : "1");
         }
-        return convert_binary_to_string(encrypted_text);
+        return convert_binary_to_string(encrypted_text.toString());
     }
 
 }
