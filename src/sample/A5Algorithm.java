@@ -15,7 +15,7 @@ public class A5Algorithm {
     private final int[] reg_LFSR2;
     private final int[] reg_LFSR3;
     private int[] session_key;
-    private int[] frame_counter;
+    private final int[] frame_counter = new int[]{1, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1,};
     private int[] key_stream;
 
     private final int lfsr1_clock_bit = 8;
@@ -61,10 +61,9 @@ public class A5Algorithm {
     }
 
     public void setFrame_counter() {
-        this.frame_counter = new int[22];
-        for (int i = 0; i < 22; i++) {
+       /* for (int i = 0; i < 22; i++) {
             this.frame_counter[i] = Math.random() > 0.5 ? 1 : 0;
-        }
+        }*/
         String frame_string_text = "\n** frame counter after 22 cycle  **\n ";
         for (int i = 0; i < frame_counter.length; i++) {
             frame_string_text += frame_counter[i];

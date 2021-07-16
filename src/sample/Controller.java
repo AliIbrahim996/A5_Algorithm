@@ -196,6 +196,7 @@ public class Controller {
                     try {
                         p.read_audio_file(file);
                         enc.visibleProperty().setValue(true);
+                        dec.visibleProperty().setValue(true);
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
                     }
@@ -205,6 +206,7 @@ public class Controller {
                     try {
                         p.read_file(file);
                         enc.visibleProperty().setValue(true);
+                        dec.visibleProperty().setValue(true);
                     } catch (InterruptedException | IOException ex) {
                         JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
 
