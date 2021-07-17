@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.bind.DatatypeConverter;
 
 public class Controller {
     @FXML
@@ -39,7 +40,10 @@ public class Controller {
 
 
     public void write_to_text_area(String text) {
-        Platform.runLater(() -> algo_text.appendText(text));
+        if (text.length() <= 1000000)
+            Platform.runLater(() -> algo_text.appendText(text));
+        else
+            System.out.println(text);
     }
 
     @FXML
@@ -144,12 +148,13 @@ public class Controller {
     @FXML
     private void on_save_action(ActionEvent event) {
 
-        FileChooser.ExtensionFilter extFilter =
+        FileChooser.ExtensionFilter txt_files =
                 new FileChooser.ExtensionFilter("TXT files", "*.txt");
+        FileChooser.ExtensionFilter audio_files =
+                new FileChooser.ExtensionFilter("Audio files", "*.m4a");
         FileChooser save_as = new FileChooser();
-        save_as.getExtensionFilters().add(extFilter);
+        save_as.getExtensionFilters().addAll(txt_files, audio_files);
         File file = save_as.showSaveDialog(null);
-
         Thread th_process = new Thread(() -> {
             try {
                 p.process();
@@ -161,7 +166,12 @@ public class Controller {
 
         Thread th_save_thread = new Thread(() -> {
             try {
-                p.save_file(file);
+                int type;
+                if (file.getAbsoluteFile().getName().endsWith(".m4a"))
+                    type = 1;
+                else
+                    type = 2;
+                p.save_file(file, type);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -290,14 +300,21 @@ public class Controller {
             }
         }
 
-        public void save_file(File file) throws InterruptedException {
+        public void save_file(File file, int type) throws InterruptedException {
             Thread.sleep(2000);
             synchronized (this) {
                 try {
-                    PrintWriter writer;
-                    writer = new PrintWriter(file);
-                    writer.println(text);
-                    writer.close();
+                    if (type == 1) {
+                        byte[] decoded_array = DatatypeConverter.parseBase64Binary(text);
+                        FileOutputStream output_stream = new FileOutputStream(file);
+                        output_stream.write(decoded_array);
+                        output_stream.close();
+                    } else {
+                        PrintWriter writer;
+                        writer = new PrintWriter(file);
+                        writer.println(text);
+                        writer.close();
+                    }
                     write_to_text_area("\n** File " + file.getName() + " saved successfully!**\n");
                     notify();
                 } catch (IOException ex) {
@@ -345,7 +362,8 @@ public class Controller {
                     write_to_text_area("** Reading  file \n");
                     System.out.println("Audio file");
                     byte[] bytes = Files.readAllBytes(file.toPath());
-                    lines = algorithm.convert_byte_arrays_to_binary(bytes);
+                    String encoded = DatatypeConverter.printBase64Binary(bytes);
+                    lines = algorithm.to_binary(encoded);
                     System.out.println("audio file length : " + lines.length());
                     write_to_text_area("finished! **\n");
                     audio_flag = true;

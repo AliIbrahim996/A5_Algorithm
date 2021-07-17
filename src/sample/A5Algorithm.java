@@ -189,7 +189,7 @@ public class A5Algorithm {
 
     public String to_binary(String plain_text) {
         System.out.println("Start converting to binary");
-        System.out.println("plain_text length" + plain_text.length());
+        System.out.println("plain_text length " + plain_text.length());
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < plain_text.length(); i++) {
             result.append(String.format("%8s", Integer.toBinaryString(plain_text.charAt(i)))   // char -> int, auto-cast
@@ -199,7 +199,7 @@ public class A5Algorithm {
     }
 
     public String convert_byte_arrays_to_binary(byte[] input) {
-
+        System.out.println("Array size:  " + input.length);
         StringBuilder result = new StringBuilder();
         for (byte b : input) {
             int val = b;
@@ -270,11 +270,11 @@ public class A5Algorithm {
 
     public String decrypt(String cipher_text) {
         System.out.println("Running..");
-        StringBuilder encrypted_text = new StringBuilder();
+        StringBuilder plain_text = new StringBuilder();
         for (int i = 0; i < cipher_text.length(); i++) {
-            encrypted_text.append((this.key_stream[i % 228] ^ cipher_text.charAt(i)) == 48 ? "0" : "1");
+            plain_text.append((this.key_stream[i % 228] ^ cipher_text.charAt(i)) == 48 ? "0" : "1");
         }
-        return convert_binary_to_string(encrypted_text.toString());
+        return convert_binary_to_string(plain_text.toString());
     }
 
 }
