@@ -342,7 +342,7 @@ public class Controller {
             }
         }
 
-        private void solver2() throws InterruptedException {
+        private void solver2(){
             text = algorithm.decrypt(lines);
             write_to_text_area("\n** Plain text is: **\n" + text);
         }

@@ -198,20 +198,6 @@ public class A5Algorithm {
         return result.toString();
     }
 
-    public String convert_byte_arrays_to_binary(byte[] input) {
-        System.out.println("Array size:  " + input.length);
-        StringBuilder result = new StringBuilder();
-        for (byte b : input) {
-            int val = b;
-            for (int i = 0; i < 8; i++) {
-                result.append((val & 128) == 0 ? 0 : 1);      // 128 = 1000 0000
-                val <<= 1;
-            }
-        }
-        return result.toString();
-
-    }
-
     public String convert_binary_to_string(String binary_string) {
         StringBuilder sb = new StringBuilder();
         Arrays.stream(binary_string.split("(?<=\\G.{8})")).forEach(s -> sb.append((char) Integer.parseInt(s, 2)));
