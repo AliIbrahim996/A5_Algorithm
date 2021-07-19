@@ -24,6 +24,32 @@ public class A5Algorithm {
 
     Controller c;
 
+
+    public String get_registers_value() {
+        StringBuilder result = new StringBuilder();
+        result.append("Register LFSR1 bits are :\n");
+        for (int j : reg_LFSR1) result.append(j).append(" ");
+        result.append("\n");
+        result.append("Register LFSR2 bits are :\n");
+        for (int j : reg_LFSR2) result.append(j).append(" ");
+        result.append("\n");
+        result.append("Register LFSR3 bits are :\n");
+        for (int j : reg_LFSR3) result.append(j).append(" ");
+        return result.toString();
+    }
+
+    public int[] getReg_LFSR1() {
+        return reg_LFSR1;
+    }
+
+    public int[] getReg_LFSR2() {
+        return reg_LFSR2;
+    }
+
+    public int[] getReg_LFSR3() {
+        return reg_LFSR3;
+    }
+
     /**
      * @param c an Instance of Controller Class
      * @breif constructor
@@ -53,7 +79,7 @@ public class A5Algorithm {
      * The registers are initialized with zero-values, and are in
      * this step clocked 64 times with session key
      */
-    private void clocking_lfsrs_with_session_key() {
+    public void clocking_lfsrs_with_session_key() {
         reg_LFSR1 = new int[19];
         reg_LFSR2 = new int[22];
         reg_LFSR3 = new int[23];
@@ -68,6 +94,30 @@ public class A5Algorithm {
         }
     }
 
+
+    public void step1() {
+        clocking_lfsrs_with_session_key();
+    }
+
+    public void step2() {
+        clocking_lfsrs_with_session_key();
+        clocking_lFSRs_with_frame_counter();
+    }
+
+    void step3() {
+        clocking_lfsrs_with_session_key();
+        clocking_lFSRs_with_frame_counter();
+        for (int i = 0; i < 100; i++)
+            clocking_lFSRs_with_majority_vote();
+    }
+
+    void step4() {
+        clocking_lfsrs_with_session_key();
+        clocking_lFSRs_with_frame_counter();
+        for (int i = 0; i < 100; i++)
+            clocking_lFSRs_with_majority_vote();
+        production_of_key_stream();
+    }
 
     /**
      * a method to shift registers one-bit to left

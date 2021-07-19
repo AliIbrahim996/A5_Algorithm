@@ -41,7 +41,7 @@
             <Font name="Century" size="16.0"/>
         </font>
     </Label>
-    <ComboBox fx:id="cycle" layoutX="140.0" layoutY="271.0" prefWidth="150.0" visible="false"/>
+    <ComboBox fx:id="cycle" layoutX="140.0" layoutY="271.0" prefWidth="150.0" visible="false" onAction="#on_cycle_selected"/>
     <Button fx:id="save" layoutX="517.0" layoutY="202.0" mnemonicParsing="false" onAction="#on_save_action"
             style="-fx-background-color: #000055;" text="Save" textFill="WHITE" visible="false">
         <font>

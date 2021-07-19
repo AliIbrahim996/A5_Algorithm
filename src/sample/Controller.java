@@ -1,6 +1,7 @@
 package sample;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -92,6 +93,7 @@ public class Controller {
                 read_file.visibleProperty().setValue(true);
                 cycle.visibleProperty().setValue(true);
                 cycle_label.visibleProperty().setValue(true);
+                cycle.setItems(FXCollections.observableArrayList(64, 22, 100, 228));
             } catch (IOException | InterruptedException ex) {
                 JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
             }
@@ -240,6 +242,43 @@ public class Controller {
 
     }
 
+    public void on_cycle_selected(ActionEvent event) {
+        int value = (int) cycle.getValue();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        switch (value) {
+            case 64: //Todo show registers after clocking with session key
+                p.algorithm.step1();
+                alert.setTitle("LFSR Registers");
+                alert.setHeaderText("Registers value");
+                alert.setContentText(p.algorithm.get_registers_value());
+                alert.show();
+                break;
+            case 22://Todo show registers after clocking with frame counter
+                p.algorithm.step2();
+                alert.setTitle("LFSR Registers");
+                alert.setHeaderText("Information Alert");
+                alert.setContentText(p.algorithm.get_registers_value());
+                alert.show();
+                break;
+            case 100://Todo show registers after clocking with majority value
+                p.algorithm.step3();
+                alert.setTitle("LFSR Registers");
+                alert.setHeaderText("Information Alert");
+                alert.setContentText(p.algorithm.get_registers_value());
+                alert.show();
+                break;
+            case 228://Todo show registers after generating key stream.
+                p.algorithm.step4();
+                alert.setTitle("LFSR Registers");
+                alert.setHeaderText("Information Alert");
+                alert.setContentText(p.algorithm.get_registers_value());
+                alert.show();
+                break;
+        }
+
+
+    }
+
 
     class Process {
 
@@ -342,7 +381,7 @@ public class Controller {
             }
         }
 
-        private void solver2(){
+        private void solver2() {
             text = algorithm.decrypt(lines);
             write_to_text_area("\n** Plain text is: **\n" + text);
         }
