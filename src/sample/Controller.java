@@ -245,32 +245,26 @@ public class Controller {
     public void on_cycle_selected(ActionEvent event) {
         int value = (int) cycle.getValue();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("LFSR Registers");
+        alert.setHeaderText("Information Alert");
         switch (value) {
             case 64: //Todo show registers after clocking with session key
                 p.algorithm.step1();
-                alert.setTitle("LFSR Registers");
-                alert.setHeaderText("Registers value");
                 alert.setContentText(p.algorithm.get_registers_value());
                 alert.show();
                 break;
             case 22://Todo show registers after clocking with frame counter
                 p.algorithm.step2();
-                alert.setTitle("LFSR Registers");
-                alert.setHeaderText("Information Alert");
                 alert.setContentText(p.algorithm.get_registers_value());
                 alert.show();
                 break;
             case 100://Todo show registers after clocking with majority value
                 p.algorithm.step3();
-                alert.setTitle("LFSR Registers");
-                alert.setHeaderText("Information Alert");
                 alert.setContentText(p.algorithm.get_registers_value());
                 alert.show();
                 break;
             case 228://Todo show registers after generating key stream.
                 p.algorithm.step4();
-                alert.setTitle("LFSR Registers");
-                alert.setHeaderText("Information Alert");
                 alert.setContentText(p.algorithm.get_registers_value());
                 alert.show();
                 break;

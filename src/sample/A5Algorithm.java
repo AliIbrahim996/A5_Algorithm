@@ -37,19 +37,7 @@ public class A5Algorithm {
         for (int j : reg_LFSR3) result.append(j).append(" ");
         return result.toString();
     }
-
-    public int[] getReg_LFSR1() {
-        return reg_LFSR1;
-    }
-
-    public int[] getReg_LFSR2() {
-        return reg_LFSR2;
-    }
-
-    public int[] getReg_LFSR3() {
-        return reg_LFSR3;
-    }
-
+    
     /**
      * @param c an Instance of Controller Class
      * @breif constructor
