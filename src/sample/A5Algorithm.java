@@ -37,7 +37,7 @@ public class A5Algorithm {
         for (int j : reg_LFSR3) result.append(j).append(" ");
         return result.toString();
     }
-    
+
     /**
      * @param c an Instance of Controller Class
      * @breif constructor
@@ -47,6 +47,9 @@ public class A5Algorithm {
     }
 
 
+    /**
+     * @param session_key 64-bit string
+     */
     public void set_session_key(String session_key) {
         this.session_key = new int[64];
         for (int i = 0; i < 64; i++)
@@ -225,6 +228,11 @@ public class A5Algorithm {
         }
     }
 
+    /**
+     *
+     * @param plain_text the text you want to convert to binary
+     * @return a binary String
+     */
     public String to_binary(String plain_text) {
         System.out.println("Start converting to binary");
         System.out.println("plain_text length " + plain_text.length());
@@ -236,6 +244,12 @@ public class A5Algorithm {
         return result.toString();
     }
 
+    /**
+     * A method to convert a binary to String
+     *
+     * @param binary_string the binary text that you want to convert to plain text
+     * @return string represent the actual charters of the binary string
+     */
     public String convert_binary_to_string(String binary_string) {
         StringBuilder sb = new StringBuilder();
         Arrays.stream(binary_string.split("(?<=\\G.{8})")).forEach(s -> sb.append((char) Integer.parseInt(s, 2)));
@@ -292,6 +306,12 @@ public class A5Algorithm {
         return encrypted_text.toString();
     }
 
+    /**
+     * a method to decrypt a binary text to its actual value
+     *
+     * @param cipher_text
+     * @return plain text
+     */
     public String decrypt(String cipher_text) {
         System.out.println("Running..");
         StringBuilder plain_text = new StringBuilder();

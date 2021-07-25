@@ -333,6 +333,12 @@ public class Controller {
             }
         }
 
+        /**
+         * a method to save a file according to its type
+         * @param file the file you want to save
+         * @param type either txt or m4a file
+         * @throws InterruptedException in case of interrupted thread
+         */
         public void save_file(File file, int type) throws InterruptedException {
             Thread.sleep(2000);
             synchronized (this) {
@@ -388,6 +394,12 @@ public class Controller {
             write_to_text_area("\n** Cipher text is: **\n" + text);
         }
 
+        /**
+         * a method to read an audio file
+         * @param file that you want to read
+         * @throws  InterruptedException in case of thread interrupted
+         * @throws IOException in case of some exceptions or errors in reading file
+         */
         public void read_audio_file(File file) throws InterruptedException, IOException {
             Thread.sleep(2000);
             synchronized (this) {
